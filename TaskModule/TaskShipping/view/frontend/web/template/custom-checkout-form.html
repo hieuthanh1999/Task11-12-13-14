@@ -1,0 +1,14 @@
+<div>
+  <form id="custom-checkout-form" class="form" data-bind="attr: {'data-hasrequired': $t('* Required Fields')}">
+      <fieldset class="fieldset">
+          <h3 data-bind="i18n: 'Shipping method'"></h3>
+          <input class="input-text" type="text" name="shipping-price" id="shipping-price" style="width: 50%;" />
+          <!-- ko foreach: getRegion('custom-checkout-form-fields') -->
+          <!-- ko template: getTemplate() --><!-- /ko -->
+          <!--/ko-->
+      </fieldset>
+      <button type="button" data-bind="click: onSubmit" class="action">
+          <span data-bind="i18n: 'Apply'"></span>
+      </button>
+  </form>
+</div>

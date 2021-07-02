@@ -1,0 +1,44 @@
+<div class="payment-option _collapsible opc-payment-additional discount-code _active" data-bind="mageInit: {'collapsible':{'openedState': '_active'}}" data-collapsible="true" role="tablist">
+    <div class="payment-option-title field choice" data-role="title" role="tab" aria-selected="true" aria-expanded="true" tabindex="0">
+        <span class="action action-toggle" id="block-discount-heading" role="heading" aria-level="2">
+            <!-- ko i18n: 'Apply '--><span>Order By</span><!-- /ko -->
+        </span>
+    </div>
+    <div class="payment-option-content" data-role="content" role="tabpanel" aria-hidden="false" style="display: block;">
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() -->
+<div data-role="checkout-messages" class="messages" data-bind="visible: isVisible(), click: removeAll">
+    <!-- ko foreach: messageContainer.getErrorMessages() --><!--/ko-->
+    <!-- ko foreach: messageContainer.getSuccessMessages() --><!--/ko-->
+</div>
+<!-- /ko -->
+        <!--/ko-->
+        <form class="form form-discount" id="discount-form" data-bind="submit: apply" novalidate="novalidate">
+            <div class="payment-option-inner">
+                <div class="field">
+                    <label class="label" for="discount-code">
+                        <span data-bind="i18n: 'Order by'">Order By</span>
+                    </label>
+                    <div class="control">
+                        <input class="input-text" type="text" id="orderby" name="orderby" >
+                    </div>
+                </div>
+            </div>
+            <div class="actions-toolbar">
+                <div class="primary">
+                    <!-- ko ifnot: isApplied() -->
+                        <button class="action action-apply" type="submit" value="Apply OrderBy">
+                            <span><!-- ko i18n: 'Apply Discount'--><span>Apply OrderBy</span><!-- /ko --></span>
+                        </button>
+                    <!-- /ko -->
+                    <!-- ko if: isApplied() --><!-- /ko -->
+                </div>
+            </div>
+            <!-- ko foreach: getRegion('captcha') -->
+            <!-- ko template: getTemplate() -->
+<!-- ko if: (isRequired() && getIsVisible())--><!-- /ko -->
+<!-- /ko -->
+            <!-- /ko -->
+        </form>
+    </div>
+</div>
