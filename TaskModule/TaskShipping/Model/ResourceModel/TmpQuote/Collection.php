@@ -1,5 +1,5 @@
 <?php
-namespace TaskModule\TaskShipping\ResourceModel\TmpQuote;
+namespace TaskModule\TaskShipping\Model\ResourceModel\TmpQuote;
 
 class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {

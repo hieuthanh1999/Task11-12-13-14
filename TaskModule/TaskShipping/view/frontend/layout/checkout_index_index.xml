@@ -18,6 +18,7 @@
                                                                 <item name="custom-checkout-form-container" xsi:type="array">
                                                                     <!-- Add this item to configure your js file  -->
                                                                     <item name="component" xsi:type="string">TaskModule_TaskShipping/js/view/custom-checkout-form</item>
+                                                                   
                                                                     <item name="config" xsi:type="array">
                                                                         <!-- And this to add your html template  -->
                                                                         <item name="template" xsi:type="string">TaskModule_TaskShipping/custom-checkout-form</item>

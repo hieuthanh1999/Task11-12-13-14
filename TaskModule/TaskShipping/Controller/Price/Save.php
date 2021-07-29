@@ -21,6 +21,8 @@ class Save extends \Magento\Framework\App\Action\Action
 
     protected $resultJsonFactory;
 
+    protected $id;
+    protected $id_quote;
     /**
      * @param \Magento\Framework\App\Action\Context $context
      */
@@ -29,7 +31,7 @@ class Save extends \Magento\Framework\App\Action\Action
         \Magento\Framework\View\Result\PageFactory $pageFactory,
         \Magento\Framework\Serialize\Serializer\Json $json,
          \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory,
-         \TaskModule\TaskShipping\Model\TmpQuoteFactory $tmpQuoteFactory,
+         \TaskModule\TaskShipping\Model\TmpQuoteFactory $tmpQuoteFactory
          
     )
     {
@@ -48,16 +50,34 @@ class Save extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $data = $this->getRequest()->getContent();
+        // print_r($data);
+        // die;
         $response = $this->_json->unserialize($data);
+        $quoteId  = $response['quoteId'];
+        $quote   = $this->_tmpQuote->create();
 
-        $quote = $this->_tmpQuote->create();
-
-        $quote->addData([
-			"id_quote" => $response['quoteId'],
-			"price" => $response['price']
-			]);
-        $quote->save();
-
-        return var_dump($response);
+        $dataQuote = $quote->getCollection()->addFieldToFilter('id_quote', $quoteId);
+            foreach ($dataQuote as $key => $item) {
+                    $this->id_quote =$item['id_quote'];
+                    $this->id =$item['id'];
+            }
+            if($this->id_quote){
+                $quote = $quote->load($this->id);
+                $quote->setPrice($response['price']);
+                $quote->save(); 
+                echo "update";       
+            }
+            else{
+                $quote->setData([
+                    "id_quote"  => $quoteId,
+                    "price"     => $response['price']
+                    ]);
+                $quote->save();
+                echo "create"; 
+            }
+        //var_dump($response);
+        $resultJson = $this->resultJsonFactory->create();
+        return  $resultJson->setData('response', $response);
+        //return var_dump($response);
     }
 }

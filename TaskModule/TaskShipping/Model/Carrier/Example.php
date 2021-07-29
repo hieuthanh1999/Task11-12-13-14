@@ -16,7 +16,8 @@ class Example extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
      * @param \Magento\Checkout\Model\Session
      */
     private $_tmpQuote;
-
+    protected $resourceConnection;
+    protected $_quote;
 
     /**
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
@@ -33,11 +34,15 @@ class Example extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
         \Magento\Shipping\Model\Rate\ResultFactory $rateResultFactory,
         \Magento\Quote\Model\Quote\Address\RateResult\MethodFactory $rateMethodFactory,
         \TaskModule\TaskShipping\Model\TmpQuoteFactory $tmpQuoteFactory,
+        \Magento\Framework\App\ResourceConnection $resourceConnection,
+        \Magento\Checkout\Model\Cart $quoteCart,
         array $data = []
     ) {
         $this->_tmpQuote = $tmpQuoteFactory;
         $this->_rateResultFactory = $rateResultFactory;
         $this->_rateMethodFactory = $rateMethodFactory;
+        $this->resourceConnection = $resourceConnection;
+        $this->_quote = $quoteCart;
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
     }
  
@@ -50,14 +55,10 @@ class Example extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
     }
  
 
-    public function getNewTmpQuote(){
-
-        $quote = $this->_tmpQuote->create();
-        $quote->addAttributeToSelect('*');
-        $quote->setPageSize(1);
-        $quote->setOrder('id','DESC');
-        return $quote;
-       
+    public function getNewTmpQuote($quoteId){
+        $query = 'SELECT price FROM aht_quote WHERE id_quote = ' .$quoteId ;
+        $results = $this->resourceConnection->getConnection()->fetchAll($query);
+        return $results;  
     }
 
     /**
@@ -82,13 +83,20 @@ class Example extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
  
         $method->setMethod('example');
         $method->setMethodTitle($this->getConfigData('name'));
- 
-        /*you can fetch shipping price from different sources over some APIs, we used price from config.xml - xml node price*/
-        $amount = $this->getConfigData('price');
- 
-        $method->setPrice('12');
-        $method->setCost('12');
- 
+        
+        $quoteId = $this->_quote->getQuote()->getId();
+        $test = $this->getNewTmpQuote($quoteId);
+        // if($test)
+        // {
+            $method->setPrice($test[0]['price']);
+            $method->setCost($test[0]['price']);
+        // }
+        // else{
+        //     $method->setPrice('0');
+        //     $method->setCost('0');
+        // }
+       
+
         $result->append($method);
  
         return $result;

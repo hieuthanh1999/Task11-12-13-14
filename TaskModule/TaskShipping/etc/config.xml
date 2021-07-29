@@ -7,7 +7,7 @@
                 <sallowspecific>0</sallowspecific>
                 <model>TaskModule\TaskShipping\Model\Carrier\Example</model>
                 <name>post office</name>
-                <price>15.00</price>
+                <price>12</price>
                 <title>Fast</title>
                 <type>I</type>
             </example>
